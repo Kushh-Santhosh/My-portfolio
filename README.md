@@ -1,16 +1,69 @@
-# React + Vite
+# Kushal Santhosh | AI Developer Portfolio
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A premium animated portfolio website built with React, Tailwind CSS, and Framer Motion.
 
-Currently, two official plugins are available:
+## Live Website
+- https://kushal-santhosh-p.web.app
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Repository
+- https://github.com/Kushh-Santhosh/My-portfolio
 
-## React Compiler
+## About This Project
+This portfolio showcases Kushal Santhosh as a Developer, AI Builder, and Future Tech Founder.
+The website is designed with smooth motion, modern UI, and a futuristic light-blue visual style.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
+- Framer-style premium layout with smooth animations
+- Sticky floating navigation and smooth scroll
+- Hero with layered animated project cards
+- About section with profile photo
+- Interactive object cards (Guitar, Laptop, AI Core)
+- Project cards that open GitHub in a new tab
+- Skills, services, mindset, journey, and interests sections
+- Embedded Calendly booking section
+- Clickable contact and social links
+- Firebase Hosting deployment setup
 
-## Expanding the ESLint configuration
+## Tech Stack
+- React.js
+- Tailwind CSS
+- Framer Motion
+- React Router
+- React Icons
+- Firebase Hosting
+- Vite
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Contact
+- Email: kushal.podaralla@gmail.com
+- Phone / WhatsApp: +91 9945690876
+- GitHub: https://github.com/Kushh-Santhosh
+- LinkedIn: https://www.linkedin.com/in/kushal-santhosh-p-007a62330
+- Instagram: https://instagram.com/santhosh_podaralla
+
+## Local Development
+```bash
+npm install
+npm run dev
+```
+
+## Production Build
+```bash
+npm run build
+npm run preview
+```
+
+## Deploy to Firebase
+```bash
+firebase login
+firebase deploy --only hosting --project kushal-santhosh-p
+```
+
+## Project Setup Notes
+- Firebase config files are included:
+  - `firebase.json`
+  - `.firebaserc`
+- Hosting is configured as SPA with rewrite to `index.html`.
+- Build output folder: `dist`.
+
+## Goal
+This portfolio is part of Kushal's long-term mission to build scalable products and launch a future technology company.
