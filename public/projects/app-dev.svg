@@ -1,0 +1,17 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="720" rx="42" fill="#020816"/>
+  <path d="M0 520C250 410 350 690 560 560C770 430 920 520 1200 390V720H0V520Z" fill="url(#soft)"/>
+  <rect x="220" y="120" width="760" height="470" rx="34" fill="#081630" stroke="#7DD3FC" stroke-opacity="0.3"/>
+  <rect x="260" y="170" width="680" height="300" rx="26" fill="#0B2145"/>
+  <circle cx="350" cy="540" r="26" fill="#38BDF8" fill-opacity="0.55"/>
+  <circle cx="430" cy="540" r="26" fill="#0EA5E9" fill-opacity="0.35"/>
+  <circle cx="510" cy="540" r="26" fill="#0369A1" fill-opacity="0.35"/>
+  <text x="290" y="270" fill="#E0F2FE" font-size="58" font-family="Sora, Arial" font-weight="700">APP DEVELOPMENT</text>
+  <text x="290" y="340" fill="#BAE6FD" font-size="30" font-family="Plus Jakarta Sans, Arial">Build. Test. Iterate. Launch.</text>
+  <defs>
+    <linearGradient id="soft" x1="610" y1="390" x2="610" y2="720" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#0EA5E9" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#0EA5E9" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+</svg>

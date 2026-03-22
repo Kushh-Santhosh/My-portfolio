@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Sora:wght@500;600;700;800&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply m-0 min-h-screen bg-night font-body text-slate-100 antialiased;
+    background-image:
+      radial-gradient(1300px 700px at 10% -8%, rgba(56, 189, 248, 0.22), transparent 50%),
+      radial-gradient(1100px 800px at 95% -10%, rgba(125, 211, 252, 0.24), transparent 52%),
+      linear-gradient(180deg, #020816 0%, #030a1c 48%, #020714 100%);
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.grid-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background-image:
+    linear-gradient(rgba(125, 211, 252, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(125, 211, 252, 0.08) 1px, transparent 1px);
+  background-size: 42px 42px;
+  mask-image: radial-gradient(circle at center, black 18%, transparent 88%);
+  opacity: 0.34;
+}
+
+.cursor-glow {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+  height: 380px;
+  width: 380px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(125, 211, 252, 0.26) 0%, rgba(56, 189, 248, 0.06) 45%, transparent 70%);
+  filter: blur(6px);
+}
+
+.section-shell {
+  @apply mt-20 sm:mt-24;
+}
+
+.glass-card {
+  @apply rounded-3xl border border-white/15 bg-white/[0.06] backdrop-blur-xl;
+  box-shadow:
+    0 14px 35px rgba(1, 12, 29, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.09);
+}
+
+.project-card {
+  @apply overflow-hidden rounded-3xl border border-white/15 bg-white/[0.06] backdrop-blur-xl;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow:
+    0 12px 26px rgba(2, 8, 22, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.project-card:hover {
+  box-shadow:
+    0 22px 44px rgba(2, 8, 22, 0.65),
+    0 0 0 1px rgba(125, 211, 252, 0.22) inset;
+}
+
+.project-visual {
+  @apply relative h-52 overflow-hidden border-b border-white/10 p-5;
+}
+
+.project-visual::after {
+  content: '';
+  position: absolute;
+  inset: auto -70px -90px auto;
+  width: 220px;
+  height: 220px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(125, 211, 252, 0.4), transparent 72%);
+}
+
+.contact-row {
+  @apply flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm text-slate-200 transition;
+}
+
+.contact-row:hover {
+  @apply border-cyan-200/40 bg-cyan-300/10 text-white;
+}
+
+.floating-contact {
+  @apply fixed bottom-6 right-6 z-50 rounded-full border border-cyan-200/45 bg-cyan-300/25 px-6 py-3 text-sm font-semibold text-cyan-100 backdrop-blur-md;
+  box-shadow:
+    0 10px 26px rgba(14, 116, 144, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+@media (max-width: 900px) {
+  .cursor-glow {
+    display: none;
+  }
+}

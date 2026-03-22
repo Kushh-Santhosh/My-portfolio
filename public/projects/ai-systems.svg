@@ -1,0 +1,24 @@
+<svg width="1200" height="720" viewBox="0 0 1200 720" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="720" rx="42" fill="#030818"/>
+  <circle cx="930" cy="160" r="230" fill="url(#grad1)" fill-opacity="0.8"/>
+  <circle cx="310" cy="590" r="280" fill="url(#grad2)" fill-opacity="0.5"/>
+  <path d="M170 210H1030" stroke="#7DD3FC" stroke-opacity="0.35" stroke-width="2"/>
+  <path d="M170 270H760" stroke="#7DD3FC" stroke-opacity="0.25" stroke-width="2"/>
+  <path d="M170 330H890" stroke="#7DD3FC" stroke-opacity="0.2" stroke-width="2"/>
+  <path d="M170 390H710" stroke="#7DD3FC" stroke-opacity="0.15" stroke-width="2"/>
+  <rect x="160" y="120" width="420" height="460" rx="30" fill="#07162F" stroke="#38BDF8" stroke-opacity="0.42"/>
+  <text x="200" y="220" fill="#E0F2FE" font-size="50" font-family="Sora, Arial" font-weight="700">AI SYSTEMS</text>
+  <text x="200" y="290" fill="#BAE6FD" font-size="28" font-family="Plus Jakarta Sans, Arial">Automation + Intelligence</text>
+  <rect x="190" y="350" width="190" height="70" rx="16" fill="#0B2447"/>
+  <text x="230" y="394" fill="#A5F3FC" font-size="28" font-family="Sora, Arial" font-weight="700">v2.6</text>
+  <defs>
+    <linearGradient id="grad1" x1="780" y1="-40" x2="1090" y2="340" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#22D3EE"/>
+      <stop offset="1" stop-color="#3B82F6" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="grad2" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(310 590) rotate(90) scale(280)">
+      <stop stop-color="#0EA5E9"/>
+      <stop offset="1" stop-color="#0EA5E9" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+</svg>
