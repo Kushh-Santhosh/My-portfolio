@@ -1,729 +1,433 @@
 import { useEffect, useMemo, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import {
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useScroll,
+  useSpring,
+  useTransform,
+} from 'framer-motion'
 import {
   FaArrowUpRightFromSquare,
   FaCalendarCheck,
+  FaDiscord,
   FaEnvelope,
   FaGithub,
   FaInstagram,
-  FaLaptopCode,
   FaLinkedin,
-  FaPhone,
 } from 'react-icons/fa6'
-import { FaGuitar } from 'react-icons/fa'
+import { SiFirebase, SiMongodb, SiNodedotjs, SiPython, SiReact, SiTailwindcss } from 'react-icons/si'
+import { FaJava } from 'react-icons/fa'
 import { GiArtificialIntelligence } from 'react-icons/gi'
 import clsx from 'clsx'
 
 const GITHUB_URL = 'https://github.com/Kushh-Santhosh'
 const LINKEDIN_URL = 'https://www.linkedin.com/in/kushal-santhosh-p-007a62330'
 const INSTAGRAM_URL = 'https://instagram.com/santhosh_podaralla'
-const CALENDLY_URL =
-  'https://calendly.com/kushh-santhosh/30min?hide_event_type_details=1&hide_gdpr_banner=1'
+const DISCORD_URL = 'https://discord.com/'
+const CALENDLY_URL = 'https://calendly.com/kushh-santhosh/30min?hide_event_type_details=1&hide_gdpr_banner=1'
 const PROFILE_IMAGE = '/kushal-profile.jpg'
 
+const premiumEase = [0.16, 1, 0.3, 1]
+
 const navLinks = [
-  { label: 'Work', href: '#projects' },
-  { label: 'Services', href: '#services' },
   { label: 'About', href: '#about' },
+  { label: 'Work', href: '#projects' },
+  { label: 'Stack', href: '#stack' },
   { label: 'Contact', href: '#contact' },
 ]
 
-const heroCards = [
-  {
-    title: 'AI Project Systems',
-    subtitle: 'Automation and smart workflow tools',
-    position: 'top-6 left-5 rotate-[-9deg]',
-    gradient: 'from-cyan-300/90 to-blue-500/80',
-  },
-  {
-    title: 'Scalable Web Apps',
-    subtitle: 'React platforms with premium UI/UX',
-    position: 'top-20 right-0 rotate-[8deg]',
-    gradient: 'from-sky-300/80 to-indigo-500/80',
-  },
-  {
-    title: 'Future Tech Vision',
-    subtitle: 'Building toward a technology company',
-    position: 'bottom-6 left-10 rotate-[-3deg]',
-    gradient: 'from-blue-300/80 to-cyan-500/80',
-  },
+const stats = [
+  { label: 'Experience', value: '2+ years' },
+  { label: 'Projects', value: '30+ completed' },
+  { label: 'Focus', value: 'Full stack + AI' },
 ]
 
 const projects = [
   {
-    title: 'AI Project',
-    description:
-      'AI experiments, automation flows, and intelligent features for modern apps.',
+    title: 'Fensta',
+    tag: 'Startup product',
+    description: 'A startup-focused product build with clean brand presentation, web workflows, and scalable implementation direction.',
+    image: '/projects/fensta-logo.jpg',
     link: GITHUB_URL,
-    image: '/projects/ai-systems.svg',
-    theme: 'from-cyan-500/25 via-sky-500/20 to-transparent',
-    tag: 'AI Systems',
+    tone: 'cyan',
   },
   {
-    title: 'Web Development Projects',
-    description:
-      'Responsive websites and robust web platforms built for performance and scale.',
+    title: 'BattleBot',
+    tag: 'Engineering build',
+    description: 'A robotics and engineering project with mechanical experimentation, testing, and practical system building.',
+    image: '/projects/battlebot.jpg',
     link: GITHUB_URL,
-    image: '/projects/web-platform.svg',
-    theme: 'from-blue-500/25 via-indigo-500/20 to-transparent',
-    tag: 'Web Platforms',
+    tone: 'ember',
   },
   {
-    title: 'App Development Projects',
-    description:
-      'Application experiences focused on clean interaction, speed, and usability.',
+    title: 'Python Projects',
+    tag: 'Automation + logic',
+    description: 'Coding experiments, automation utilities, and problem-solving projects built with Python and practical workflows.',
+    image: null,
     link: GITHUB_URL,
-    image: '/projects/app-dev.svg',
-    theme: 'from-sky-500/25 via-cyan-500/20 to-transparent',
-    tag: 'Apps',
+    tone: 'violet',
   },
-]
-
-const skills = [
-  'AI Development',
-  'Web Development',
-  'App Development',
-  'Firebase',
-  'UI/UX Design',
-  'GitHub',
-  'React',
-  'JavaScript',
+  {
+    title: 'Freelance Projects',
+    tag: 'Client websites',
+    description: 'Responsive websites and landing pages for people and businesses, built with modern UI and reliable deployment.',
+    image: null,
+    link: GITHUB_URL,
+    tone: 'blue',
+  },
 ]
 
 const services = [
-  {
-    title: 'Website Development',
-    description: 'Modern responsive websites for businesses and personal brands.',
-  },
-  {
-    title: 'Web Application Development',
-    description: 'Custom web-based tools and full product experiences.',
-  },
-  {
-    title: 'AI-Based Features',
-    description: 'Intelligent features integrated into practical applications.',
-  },
-  {
-    title: 'Website Hosting & Deployment',
-    description: 'Launch-ready deployments with reliable performance.',
-  },
-]
-
-const currentFocus = [
-  'Building modern websites and web applications',
-  'Working on AI-based systems and tools',
-  'Hosting and testing my own projects',
-  'Learning through real-world project execution',
-  'Helping others build and launch websites',
+  ['Website Development', 'Modern responsive websites for individuals, businesses, and product ideas.'],
+  ['Web Application Development', 'Custom web tools and platforms with clean interaction and maintainable structure.'],
+  ['AI-Based Features', 'Practical AI features, automation flows, and intelligent product experiments.'],
+  ['Hosting & Deployment', 'Launch support for websites and apps with stable hosting and production builds.'],
 ]
 
 const journey = [
-  { year: '2023', text: 'Started learning web development.' },
-  { year: '2024', text: 'Built multiple websites and small applications.' },
-  { year: '2025', text: 'Started working with AI tools and automation.' },
-  {
-    year: '2026',
-    text: 'Building larger systems and planning future platforms.',
-  },
-  { year: 'Future', text: 'Launching my own technology company.' },
+  ['2023', 'Started learning web development and building small pages.'],
+  ['2024', 'Built websites, applications, and real project workflows.'],
+  ['2025', 'Moved deeper into AI tools, automation, and product thinking.'],
+  ['2026', 'Building larger systems and preparing future startup platforms.'],
 ]
 
-const differentiators = [
-  'I learn by building real projects',
-  'I focus on long-term goals and bigger systems',
-  'I experiment with new technologies regularly',
-  'I enjoy solving real-world problems',
-  'I aim to build scalable platforms, not just demos',
+const stack = [
+  { name: 'Python', desc: 'Automation, AI workflows, scripting', icon: SiPython, color: '#55d8ea', wide: false },
+  { name: 'Java', desc: 'Core programming and app logic', icon: FaJava, color: '#ff8a5c', wide: false },
+  { name: 'React', desc: 'Modern interface architecture', icon: SiReact, color: '#61dafb', wide: false },
+  { name: 'Node.js', desc: 'Backend APIs and services', icon: SiNodedotjs, color: '#78d982', wide: false },
+  { name: 'Firebase', desc: 'Hosting, auth, real-time apps', icon: SiFirebase, color: '#ffcc4d', wide: true },
+  { name: 'MongoDB', desc: 'Flexible application databases', icon: SiMongodb, color: '#6ee787', wide: true },
+  { name: 'Tailwind', desc: 'Fast premium UI systems', icon: SiTailwindcss, color: '#38bdf8', wide: true },
+  { name: 'GitHub', desc: 'Version control and collaboration', icon: FaGithub, color: '#ffffff', wide: false },
+  { name: 'AI Tools', desc: 'AI-based projects and prototypes', icon: GiArtificialIntelligence, color: '#a78bfa', wide: true },
 ]
 
-const interests = [
-  'Web Development',
-  'Artificial Intelligence',
-  'Automation Systems',
-  'Modern UI/UX Design',
-  'Platform Development',
-  'Scalable Web Systems',
-]
-
-const socialLinks = [
-  { label: 'GitHub', href: GITHUB_URL, icon: FaGithub },
-  { label: 'LinkedIn', href: LINKEDIN_URL, icon: FaLinkedin },
-  { label: 'Instagram', href: INSTAGRAM_URL, icon: FaInstagram },
-]
-
-const interactiveObjects = [
-  {
-    title: 'Guitar',
-    subtitle: 'Click to open GitHub',
-    icon: FaGuitar,
-    href: GITHUB_URL,
-  },
-  {
-    title: 'Laptop',
-    subtitle: 'Click to open GitHub',
-    icon: FaLaptopCode,
-    href: GITHUB_URL,
-  },
-  {
-    title: 'AI Core',
-    subtitle: 'Click to open GitHub',
-    icon: GiArtificialIntelligence,
-    href: GITHUB_URL,
-  },
+const socials = [
+  { label: 'Email', value: 'kushal.podaralla@gmail.com', href: 'mailto:kushal.podaralla@gmail.com', icon: FaEnvelope },
+  { label: 'LinkedIn', value: 'Kushal Santosh P', href: LINKEDIN_URL, icon: FaLinkedin },
+  { label: 'Instagram', value: '@santhosh_podaralla', href: INSTAGRAM_URL, icon: FaInstagram },
+  { label: 'Discord', value: 'Available for project calls', href: DISCORD_URL, icon: FaDiscord },
 ]
 
 function Reveal({ children, className = '', delay = 0 }) {
+  const reduceMotion = useReducedMotion()
+
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
-      transition={{ duration: 0.7, delay, ease: [0.22, 1, 0.36, 1] }}
+      initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 28, filter: 'blur(10px)' }}
+      whileInView={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, filter: 'blur(0px)' }}
+      viewport={{ once: true, amount: 0.25 }}
+      transition={{ duration: 0.85, delay, ease: premiumEase }}
     >
       {children}
     </motion.div>
   )
 }
 
-function SectionHeading({ kicker, title, subtitle }) {
+function Atmosphere({ pointer }) {
   return (
-    <div className="space-y-3">
-      <p className="text-xs font-semibold uppercase tracking-[0.24em] text-cyan-200/80">
-        {kicker}
-      </p>
-      <h2 className="font-display text-3xl leading-tight text-white sm:text-4xl lg:text-5xl">
-        {title}
-      </h2>
-      {subtitle ? (
-        <p className="max-w-3xl text-sm text-slate-300 sm:text-base">{subtitle}</p>
-      ) : null}
+    <div className="atmosphere" aria-hidden="true" style={{ '--spot-x': `${pointer.x}px`, '--spot-y': `${pointer.y}px` }}>
+      <div className="atmosphere-dots" />
+      <div className="atmosphere-wave atmosphere-wave-a" />
+      <div className="atmosphere-wave atmosphere-wave-b" />
+      <div className="atmosphere-wave atmosphere-wave-c" />
+      <div className="atmosphere-spot" />
+      <div className="atmosphere-vignette" />
     </div>
+  )
+}
+
+function SectionHeading({ label, title, subtitle }) {
+  return (
+    <div className="section-heading">
+      <span>{label}</span>
+      <h2>{title}</h2>
+      {subtitle && <p>{subtitle}</p>}
+    </div>
+  )
+}
+
+function HeroPortrait() {
+  return (
+    <motion.div
+      className="hero-portrait-shell"
+      initial={{ opacity: 0, scale: 0.96, y: 30 }}
+      animate={{ opacity: 1, scale: 1, y: 0 }}
+      transition={{ duration: 1, delay: 0.28, ease: premiumEase }}
+    >
+      <img src={PROFILE_IMAGE} alt="Kushal Santosh P" className="hero-portrait" />
+      <div className="portrait-glass-panel">
+        <span>Available for freelance builds</span>
+        <strong>Web apps, AI projects, and startup-focused systems</strong>
+      </div>
+    </motion.div>
+  )
+}
+
+function TechKeyboard() {
+  const [active, setActive] = useState(stack[0])
+  const [tilt, setTilt] = useState({ x: 0, y: 0 })
+  const reduceMotion = useReducedMotion()
+
+  const onMove = (event) => {
+    if (reduceMotion) return
+    const rect = event.currentTarget.getBoundingClientRect()
+    const x = (event.clientX - rect.left) / rect.width - 0.5
+    const y = (event.clientY - rect.top) / rect.height - 0.5
+    setTilt({ x: x * 10, y: y * -8 })
+  }
+
+  return (
+    <div className="keyboard-wrap" onMouseMove={onMove} onMouseLeave={() => setTilt({ x: 0, y: 0 })}>
+      <motion.div
+        className="keyboard-stage"
+        animate={{ rotateX: 56 + tilt.y, rotateZ: -7, rotateY: tilt.x }}
+        transition={{ type: 'spring', stiffness: 120, damping: 18 }}
+      >
+        <div className="keyboard-base">
+          {stack.map((item, index) => {
+            const Icon = item.icon
+            return (
+              <motion.button
+                type="button"
+                key={item.name}
+                className={clsx('tech-key', item.wide && 'tech-key-wide')}
+                style={{ '--key-color': item.color }}
+                onMouseEnter={() => setActive(item)}
+                onFocus={() => setActive(item)}
+                onClick={() => setActive(item)}
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.045, duration: 0.45, ease: premiumEase }}
+              >
+                <Icon />
+                <span>{item.name}</span>
+              </motion.button>
+            )
+          })}
+        </div>
+      </motion.div>
+      <div className="keyboard-shadow" />
+      <motion.div className="keyboard-tooltip" key={active.name} initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}>
+        <span>{active.name}</span>
+        <p>{active.desc}</p>
+      </motion.div>
+    </div>
+  )
+}
+
+function ProjectVisual({ project }) {
+  if (project.image) {
+    return <img src={project.image} alt={`${project.title} visual`} className="project-image" loading="lazy" />
+  }
+
+  if (project.title.includes('Python')) {
+    return (
+      <div className="terminal-visual">
+        <span>kushal@dev:~$ python build.py</span>
+        <span className="terminal-line">automation_ready = True</span>
+        <span className="terminal-line">ai_tools.connect()</span>
+        <span className="terminal-pulse">deploy --clean</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="browser-visual">
+      <div className="browser-bar"><i /><i /><i /></div>
+      <div className="browser-hero" />
+      <div className="browser-lines"><span /><span /><span /></div>
+    </div>
+  )
+}
+
+function ProjectCard({ project, index }) {
+  return (
+    <Reveal delay={index * 0.08}>
+      <motion.a href={project.link} target="_blank" rel="noreferrer" className={clsx('premium-project', `project-${project.tone}`)} whileHover={{ y: -10 }}>
+        <div className="project-media">
+          <ProjectVisual project={project} />
+        </div>
+        <div className="project-copy">
+          <span>{project.tag}</span>
+          <h3>{project.title}</h3>
+          <p>{project.description}</p>
+          <strong>Open GitHub <FaArrowUpRightFromSquare /></strong>
+        </div>
+      </motion.a>
+    </Reveal>
   )
 }
 
 function App() {
   const [pointer, setPointer] = useState({ x: 0, y: 0 })
-  const [photoFallback, setPhotoFallback] = useState(false)
+  const pointerX = useMotionValue(0)
+  const pointerY = useMotionValue(0)
+  const springX = useSpring(pointerX, { stiffness: 90, damping: 24 })
+  const springY = useSpring(pointerY, { stiffness: 90, damping: 24 })
   const { scrollYProgress } = useScroll()
-  const heroParallax = useTransform(scrollYProgress, [0, 0.3], [0, -70])
+  const headerOpacity = useTransform(scrollYProgress, [0, 0.12], [0.42, 0.82])
 
   useEffect(() => {
-    const updatePointer = (event) => {
-      setPointer({ x: event.clientX, y: event.clientY })
+    const onPointerMove = (event) => {
+      const next = { x: event.clientX, y: event.clientY }
+      setPointer(next)
+      pointerX.set(next.x - 180)
+      pointerY.set(next.y - 180)
     }
 
-    window.addEventListener('pointermove', updatePointer)
-    return () => window.removeEventListener('pointermove', updatePointer)
-  }, [])
+    window.addEventListener('pointermove', onPointerMove)
+    return () => window.removeEventListener('pointermove', onPointerMove)
+  }, [pointerX, pointerY])
 
-  const stats = useMemo(
-    () => [
-      { label: 'Location', value: 'India' },
-      { label: 'Experience', value: '2+ Years' },
-      { label: 'Role', value: 'Developer + AI Builder' },
-    ],
-    [],
-  )
+  const heroVariants = useMemo(() => ({
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1, delayChildren: 0.12 } },
+  }), [])
+
+  const heroItem = {
+    hidden: { opacity: 0, y: 24, filter: 'blur(10px)' },
+    visible: { opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.9, ease: premiumEase } },
+  }
 
   return (
-    <div className="relative min-h-screen overflow-x-hidden bg-night text-slate-100">
-      <div className="grid-overlay" aria-hidden="true" />
-      <motion.div
-        aria-hidden="true"
-        className="cursor-glow"
-        animate={{ x: pointer.x - 190, y: pointer.y - 190 }}
-        transition={{ type: 'spring', damping: 22, stiffness: 130, mass: 0.3 }}
-      />
+    <div className="site-shell">
+      <Atmosphere pointer={pointer} />
+      <motion.div className="cursor-light" style={{ x: springX, y: springY }} aria-hidden="true" />
 
-      <header className="sticky top-4 z-40 px-4 sm:px-6 lg:px-8">
-        <nav className="mx-auto flex w-full max-w-6xl items-center justify-between rounded-full border border-white/15 bg-slate-950/55 px-3 py-2 backdrop-blur-xl">
-          <a
-            href="#home"
-            className="rounded-full border border-white/15 bg-white/10 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/20"
-          >
-            Kushal Santhosh
-          </a>
-          <div className="hidden items-center gap-1 md:flex">
-            {navLinks.map((item) => (
-              <a
-                key={item.href}
-                href={item.href}
-                className="rounded-full px-4 py-2 text-sm font-medium text-slate-200 transition hover:bg-white/10 hover:text-white"
-              >
-                {item.label}
-              </a>
-            ))}
+      <motion.header className="site-header" style={{ '--header-alpha': headerOpacity }}>
+        <nav>
+          <a href="#home" className="brand-mark">Kushal Santosh P</a>
+          <div className="nav-links">
+            {navLinks.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
           </div>
-          <a
-            href="#schedule"
-            className="rounded-full border border-cyan-300/40 bg-cyan-300/20 px-4 py-2 text-sm font-semibold text-cyan-50 transition hover:scale-[1.03] hover:bg-cyan-300/30"
-          >
-            Book a Call
-          </a>
+          <a href="#contact" className="nav-cta">Contact</a>
         </nav>
-      </header>
+      </motion.header>
 
-      <main className="relative z-10 mx-auto w-full max-w-6xl px-4 pb-28 pt-10 sm:px-6 lg:px-8">
-        <section
-          id="home"
-          className="grid min-h-[88vh] items-center gap-12 border-b border-white/10 pb-16 lg:grid-cols-[1.06fr_0.94fr]"
-        >
-          <Reveal className="space-y-8">
-            <span className="inline-flex items-center rounded-full border border-cyan-200/35 bg-cyan-300/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-100">
-              Developer | AI Builder | Future Tech Founder
-            </span>
-
-            <div className="space-y-5">
-              <h1 className="font-display text-4xl leading-[1.02] text-white sm:text-5xl lg:text-7xl">
-                Building Smart Apps, AI Systems and Modern Websites
-              </h1>
-              <p className="max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                Hi, I&apos;m Kushal. I build websites, applications, and AI-based systems, and I am
-                working toward launching my own technology company in the future.
-              </p>
-              <p className="max-w-2xl text-sm leading-relaxed text-slate-400 sm:text-base">
-                Over the past few years, I&apos;ve been learning by building real projects,
-                experimenting with new technologies, and turning ideas into working systems.
-              </p>
-            </div>
-
-            <div className="flex flex-wrap gap-4">
-              <a
-                href="#projects"
-                className="inline-flex items-center gap-2 rounded-full border border-cyan-200/50 bg-cyan-300/30 px-6 py-3 text-sm font-semibold text-cyan-50 transition hover:scale-[1.03]"
-              >
-                View My Work <FaArrowUpRightFromSquare className="text-xs" />
-              </a>
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition hover:scale-[1.03] hover:bg-white/10"
-              >
-                Contact Me
-              </a>
-            </div>
-
-            <div className="grid gap-3 sm:grid-cols-3">
-              {stats.map((item) => (
-                <div key={item.label} className="glass-card p-4">
-                  <p className="text-xs uppercase tracking-[0.16em] text-cyan-200/80">{item.label}</p>
-                  <p className="mt-2 text-sm font-semibold text-white">{item.value}</p>
-                </div>
-              ))}
-            </div>
-          </Reveal>
-
-          <motion.div style={{ y: heroParallax }} className="relative h-[430px] sm:h-[500px]">
-            <div className="absolute inset-0 rounded-[2rem] border border-white/12 bg-gradient-to-br from-cyan-300/8 via-sky-300/5 to-transparent" />
-            {heroCards.map((card, index) => (
-              <motion.div
-                key={card.title}
-                className={clsx(
-                  'absolute w-[78%] rounded-3xl border border-white/20 bg-slate-950/70 p-5 shadow-2xl backdrop-blur-md sm:w-[72%]',
-                  card.position,
-                )}
-                initial={{ opacity: 0, y: 40, rotate: 0 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: index * 0.15 + 0.1 }}
-                whileHover={{ scale: 1.04, rotate: 0, y: -8 }}
-              >
-                <div className={clsx('h-28 rounded-2xl bg-gradient-to-br', card.gradient)} />
-                <h3 className="mt-4 text-lg font-semibold text-white">{card.title}</h3>
-                <p className="mt-2 text-sm text-slate-300">{card.subtitle}</p>
-              </motion.div>
-            ))}
+      <main>
+        <section id="home" className="hero-section scene-section">
+          <motion.div className="hero-content" variants={heroVariants} initial="hidden" animate="visible">
+            <motion.span className="eyebrow" variants={heroItem}>BTech IT Student / Full Stack Developer / AI Developer</motion.span>
+            <motion.h1 variants={heroItem}>Building modern web apps and AI-based systems.</motion.h1>
+            <motion.p variants={heroItem}>
+              I am Kushal Santosh P, a developer from India with 2+ years of experience and 30+ completed projects across freelance websites, app development, AI experiments, and startup-focused builds.
+            </motion.p>
+            <motion.div className="hero-actions" variants={heroItem}>
+              <a href="#projects">View work <FaArrowUpRightFromSquare /></a>
+              <a href="#stack">Explore stack</a>
+            </motion.div>
+            <motion.div className="hero-stats" variants={heroItem}>
+              {stats.map((item) => <div key={item.label}><span>{item.label}</span><strong>{item.value}</strong></div>)}
+            </motion.div>
           </motion.div>
+          <HeroPortrait />
         </section>
 
-        <Reveal className="section-shell" delay={0.1}>
-          <SectionHeading
-            kicker="Interactive"
-            title="Tap the objects to jump into my GitHub world"
-            subtitle="Guitar, laptop, and AI core icons are fully interactive with hover glow and smooth motion."
-          />
-          <div className="mt-8 grid gap-4 sm:grid-cols-3">
-            {interactiveObjects.map((item, index) => {
+        <section id="about" className="scene-section about-section">
+          <Reveal>
+            <SectionHeading label="About" title="Practical developer, product-minded builder." subtitle="I build by testing real ideas, improving systems step by step, and keeping the final product useful." />
+          </Reveal>
+          <div className="about-grid">
+            <Reveal className="about-image-panel">
+              <img src={PROFILE_IMAGE} alt="Kushal Santosh P" />
+            </Reveal>
+            <Reveal className="about-copy" delay={0.1}>
+              <p>
+                Hey, I am Kushal Santosh P, a BTech Information Technology student, full stack developer, and AI developer. My work sits between clean websites, functional applications, and AI-based projects that solve practical problems.
+              </p>
+              <p>
+                Over the past 2+ years, I have completed 30+ projects, including freelance web development, app development, hosting work, and AI experiments. I enjoy building systems that look polished but still stay reliable, scalable, and easy to use.
+              </p>
+              <p>
+                My long-term direction is startup-focused: learn through real projects, build stronger platforms, and keep improving until the idea becomes a usable product.
+              </p>
+            </Reveal>
+          </div>
+        </section>
+
+        <section id="projects" className="scene-section projects-section">
+          <Reveal>
+            <SectionHeading label="Selected work" title="Projects presented like product stories." subtitle="Cinematic glass cards, real uploaded assets, and polished hover movement without losing clarity." />
+          </Reveal>
+          <div className="projects-grid">
+            {projects.map((project, index) => <ProjectCard key={project.title} project={project} index={index} />)}
+          </div>
+        </section>
+
+        <section id="stack" className="scene-section stack-section">
+          <Reveal>
+            <SectionHeading label="Tech stack" title="Interactive 3D keyboard of tools I use." subtitle="Hover or tap the keys to feel the stack respond with depth, light, and subtle motion." />
+          </Reveal>
+          <Reveal delay={0.12}>
+            <TechKeyboard />
+          </Reveal>
+        </section>
+
+        <section id="services" className="scene-section services-section">
+          <Reveal>
+            <SectionHeading label="Services" title="What I can build for you." subtitle="Clean development support for people, businesses, and early-stage product ideas." />
+          </Reveal>
+          <div className="services-grid">
+            {services.map(([title, description], index) => (
+              <Reveal key={title} delay={index * 0.06} className="service-card">
+                <span>0{index + 1}</span>
+                <h3>{title}</h3>
+                <p>{description}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section id="mindset" className="scene-section mindset-section">
+          <Reveal>
+            <SectionHeading label="Direction" title="I do not just want to write code. I want to build products." subtitle="The focus is bigger systems, practical problem solving, and technology that can become useful platforms." />
+          </Reveal>
+          <div className="timeline">
+            {journey.map(([year, text], index) => (
+              <Reveal key={year} delay={index * 0.06} className="timeline-row">
+                <span>{year}</span>
+                <p>{text}</p>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        <section id="schedule" className="scene-section schedule-section">
+          <Reveal>
+            <SectionHeading label="Schedule" title="Book a call when you want to discuss a project." subtitle="A clean scheduling panel keeps the booking flow professional and direct." />
+          </Reveal>
+          <Reveal className="schedule-panel" delay={0.1}>
+            <iframe title="Schedule a Call With Kushal Santosh P" src={CALENDLY_URL} width="100%" height="720" loading="lazy" />
+          </Reveal>
+        </section>
+
+        <section id="contact" className="scene-section contact-section">
+          <Reveal>
+            <SectionHeading label="Contact" title="Let us build something useful." subtitle="Reach me through email or social platforms for freelance websites, apps, AI projects, or startup work." />
+          </Reveal>
+          <div className="contact-grid">
+            {socials.map((item, index) => {
               const Icon = item.icon
               return (
-                <motion.a
-                  key={item.title}
-                  href={item.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="glass-card group block p-6"
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true, amount: 0.25 }}
-                  transition={{ delay: index * 0.1, duration: 0.5 }}
-                  whileHover={{ scale: 1.03, rotate: 1.2 }}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-cyan-200/40 bg-cyan-300/20 text-2xl text-cyan-100 transition group-hover:shadow-[0_0_35px_rgba(125,211,252,0.5)]">
-                      <Icon />
-                    </div>
-                    <FaArrowUpRightFromSquare className="text-cyan-100/80" />
-                  </div>
-                  <h3 className="mt-4 text-xl font-semibold text-white">{item.title}</h3>
-                  <p className="mt-2 text-sm text-slate-300">{item.subtitle}</p>
-                </motion.a>
+                <Reveal key={item.label} delay={index * 0.06}>
+                  <a href={item.href} target={item.href.startsWith('mailto:') ? '_self' : '_blank'} rel="noreferrer" className="contact-card">
+                    <Icon />
+                    <span>{item.label}</span>
+                    <strong>{item.value}</strong>
+                  </a>
+                </Reveal>
               )
             })}
           </div>
-        </Reveal>
-
-        <section id="about" className="section-shell border-t border-white/10 pt-14">
-          <Reveal>
-            <SectionHeading
-              kicker="About Me"
-              title="Developer who learns by building real systems"
-              subtitle="I focus on useful products, clean architecture, and scalable platforms with modern design."
-            />
-          </Reveal>
-
-          <div className="mt-10 grid gap-8 lg:grid-cols-[0.92fr_1.08fr]">
-            <Reveal className="glass-card p-5 sm:p-7">
-              <div className="relative overflow-hidden rounded-3xl border border-white/15 bg-slate-900/80">
-                {!photoFallback ? (
-                  <img
-                    src={PROFILE_IMAGE}
-                    alt="Kushal Santhosh"
-                    className="h-[410px] w-full object-cover"
-                    onError={() => setPhotoFallback(true)}
-                  />
-                ) : (
-                  <div className="flex h-[410px] w-full items-center justify-center bg-gradient-to-br from-slate-800 via-slate-900 to-black text-7xl font-black text-cyan-100/80">
-                    KS
-                  </div>
-                )}
-              </div>
-            </Reveal>
-
-            <Reveal className="space-y-5" delay={0.1}>
-              <p className="text-base leading-relaxed text-slate-300">
-                Hey, I&apos;m Kushal Santhosh, a developer who enjoys building things and figuring out
-                how technology can solve real problems.
-              </p>
-              <p className="text-base leading-relaxed text-slate-300">
-                I started my journey by learning web development and slowly moved into building full
-                projects, hosting websites, and experimenting with AI tools. Most of my learning
-                comes from building real systems, testing them, fixing mistakes, and improving step
-                by step.
-              </p>
-              <p className="text-base leading-relaxed text-slate-300">
-                Over the past 2+ years, I&apos;ve worked on websites, applications, and AI-related
-                experiments. I enjoy creating platforms that are visually strong, functional, and
-                scalable.
-              </p>
-              <p className="text-base leading-relaxed text-slate-300">
-                Alongside my own projects, I also build websites for others and help bring ideas to
-                life using clean design and reliable technology.
-              </p>
-            </Reveal>
-          </div>
-        </section>
-
-        <section id="projects" className="section-shell border-t border-white/10 pt-14">
-          <Reveal>
-            <SectionHeading
-              kicker="Projects"
-              title="Featured builds with premium interactions"
-              subtitle="Every project card has smooth hover motion and opens your GitHub repository in a new tab."
-            />
-          </Reveal>
-
-          <div className="mt-10 grid gap-6 lg:grid-cols-3">
-            {projects.map((project, index) => (
-              <Reveal key={project.title} delay={0.08 * index}>
-                <motion.a
-                  href={project.link}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="project-card group block"
-                  whileHover={{ y: -8 }}
-                >
-                  <div className={clsx('project-visual bg-gradient-to-br', project.theme)}>
-                    <img
-                      src={project.image}
-                      alt={`${project.title} thumbnail`}
-                      className="absolute inset-0 h-full w-full object-cover opacity-85 transition duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                    <div className="absolute inset-0 bg-slate-950/45" />
-                    <span className="relative inline-flex rounded-full border border-cyan-100/30 bg-slate-950/55 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-100">
-                      {project.tag}
-                    </span>
-                    <h3 className="relative mt-4 font-display text-2xl text-white">{project.title}</h3>
-                  </div>
-                  <div className="p-5">
-                    <p className="text-sm leading-relaxed text-slate-300">{project.description}</p>
-                    <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-cyan-100 opacity-0 transition duration-300 group-hover:opacity-100">
-                      Open GitHub <FaArrowUpRightFromSquare className="text-xs" />
-                    </span>
-                  </div>
-                </motion.a>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        <section id="skills" className="section-shell border-t border-white/10 pt-14">
-          <Reveal>
-            <SectionHeading
-              kicker="Skills"
-              title="Current stack and capability set"
-              subtitle="Animated skill cards reveal smoothly while scrolling."
-            />
-          </Reveal>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {skills.map((skill, index) => (
-              <motion.div
-                key={skill}
-                className="glass-card p-5"
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.55, delay: index * 0.06 }}
-                whileHover={{ scale: 1.03 }}
-              >
-                <p className="text-base font-semibold text-white">{skill}</p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        <section id="services" className="section-shell border-t border-white/10 pt-14">
-          <Reveal>
-            <SectionHeading
-              kicker="Services"
-              title="What I provide"
-              subtitle="Website and product development support from concept to launch."
-            />
-          </Reveal>
-
-          <div className="mt-8 grid gap-5 md:grid-cols-2">
-            {services.map((service, index) => (
-              <Reveal key={service.title} delay={index * 0.08}>
-                <div className="glass-card p-6">
-                  <h3 className="text-xl font-semibold text-white">{service.title}</h3>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-300">{service.description}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        <section id="mindset" className="section-shell border-t border-white/10 pt-14">
-          <Reveal>
-            <SectionHeading
-              kicker="Mindset"
-              title="I do not just write code, I build products"
-              subtitle="My focus is creating systems that can evolve into real platforms and solve practical problems."
-            />
-          </Reveal>
-
-          <div className="mt-8 grid gap-6 lg:grid-cols-2">
-            <Reveal className="glass-card p-6" delay={0.05}>
-              <h3 className="text-xl font-semibold text-white">What I am currently doing</h3>
-              <ul className="mt-4 space-y-3 text-sm text-slate-300">
-                {currentFocus.map((item) => (
-                  <li key={item} className="flex items-start gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 rounded-full bg-cyan-200" />
-                    <span>{item}</span>
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-
-            <Reveal className="glass-card p-6" delay={0.15}>
-              <h3 className="text-xl font-semibold text-white">My long-term goal</h3>
-              <p className="mt-4 text-sm leading-relaxed text-slate-300">
-                My long-term goal is to build my own technology company and create platforms,
-                applications, and AI systems that can scale to large numbers of users. I am moving
-                step by step by strengthening my skills and building larger systems.
-              </p>
-            </Reveal>
-          </div>
-        </section>
-
-        <section id="journey" className="section-shell border-t border-white/10 pt-14">
-          <Reveal>
-            <SectionHeading
-              kicker="Journey"
-              title="My build-first timeline"
-              subtitle="Progress through consistent building, testing, and iteration."
-            />
-          </Reveal>
-
-          <div className="mt-8 space-y-4">
-            {journey.map((step, index) => (
-              <Reveal key={step.year} delay={index * 0.05}>
-                <div className="glass-card flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
-                  <span className="text-lg font-bold text-cyan-100">{step.year}</span>
-                  <p className="max-w-3xl text-sm leading-relaxed text-slate-300">{step.text}</p>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        <section id="different" className="section-shell border-t border-white/10 pt-14">
-          <Reveal>
-            <SectionHeading
-              kicker="Differentiator"
-              title="What makes me different"
-              subtitle="Curiosity-driven execution with a long-term platform mindset."
-            />
-          </Reveal>
-
-          <div className="mt-8 flex flex-wrap gap-3">
-            {differentiators.map((point, index) => (
-              <motion.div
-                key={point}
-                className="rounded-2xl border border-white/15 bg-white/5 px-4 py-2 text-sm text-slate-200"
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true, amount: 0.2 }}
-                transition={{ duration: 0.4, delay: index * 0.04 }}
-              >
-                {point}
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        <section id="interests" className="section-shell border-t border-white/10 pt-14">
-          <Reveal>
-            <SectionHeading
-              kicker="Technology Interests"
-              title="Areas I am deeply exploring"
-              subtitle="I enjoy experimenting with tools that can power modern scalable products."
-            />
-          </Reveal>
-
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {interests.map((item, index) => (
-              <Reveal key={item} delay={index * 0.05}>
-                <div className="glass-card p-4 text-sm font-medium text-slate-200">{item}</div>
-              </Reveal>
-            ))}
-          </div>
-        </section>
-
-        <section id="schedule" className="section-shell border-t border-white/10 pt-14">
-          <Reveal>
-            <SectionHeading
-              kicker="Schedule"
-              title="Schedule a Call With Me"
-              subtitle="Book a meeting directly using Calendly."
-            />
-          </Reveal>
-
-          <Reveal className="mt-8" delay={0.12}>
-            <div className="glass-card overflow-hidden p-2">
-              <iframe
-                title="Schedule a Call With Kushal Santhosh"
-                src={CALENDLY_URL}
-                width="100%"
-                height="760"
-                loading="lazy"
-                className="w-full rounded-2xl bg-white"
-              />
-            </div>
-          </Reveal>
-        </section>
-
-        <section id="contact" className="section-shell border-t border-white/10 pb-10 pt-14">
-          <Reveal>
-            <SectionHeading
-              kicker="Contact"
-              title="Let us build something meaningful"
-              subtitle="Reach out directly through email, phone, or social platforms."
-            />
-          </Reveal>
-
-          <div className="mt-8 grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-            <Reveal className="glass-card p-6" delay={0.05}>
-              <div className="space-y-4">
-                <a
-                  href="mailto:kushal.podaralla@gmail.com"
-                  className="contact-row"
-                  target="_self"
-                >
-                  <FaEnvelope className="text-cyan-100" />
-                  <span>kushal.podaralla@gmail.com</span>
-                </a>
-                <a href="tel:+919945690876" className="contact-row" target="_self">
-                  <FaPhone className="text-cyan-100" />
-                  <span>+91 9945690876 (Phone / WhatsApp)</span>
-                </a>
-                <a href={GITHUB_URL} target="_blank" rel="noreferrer" className="contact-row">
-                  <FaGithub className="text-cyan-100" />
-                  <span>github.com/Kushh-Santhosh</span>
-                </a>
-                <a href={LINKEDIN_URL} target="_blank" rel="noreferrer" className="contact-row">
-                  <FaLinkedin className="text-cyan-100" />
-                  <span>linkedin.com/in/kushal-santhosh-p-007a62330</span>
-                </a>
-                <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="contact-row">
-                  <FaInstagram className="text-cyan-100" />
-                  <span>instagram.com/santhosh_podaralla</span>
-                </a>
-              </div>
-            </Reveal>
-
-            <Reveal className="glass-card p-6" delay={0.12}>
-              <p className="text-sm uppercase tracking-[0.2em] text-cyan-200/70">Connect</p>
-              <h3 className="mt-3 text-2xl font-semibold text-white">Social Profiles</h3>
-              <div className="mt-6 flex flex-wrap gap-3">
-                {socialLinks.map((link) => {
-                  const Icon = link.icon
-                  return (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="rounded-full border border-white/20 bg-white/5 p-3 text-xl text-cyan-100 transition hover:scale-110 hover:bg-cyan-300/25"
-                      aria-label={link.label}
-                    >
-                      <Icon />
-                    </a>
-                  )
-                })}
-              </div>
-
-              <a
-                href="#schedule"
-                className="mt-8 inline-flex items-center gap-2 rounded-full border border-cyan-200/50 bg-cyan-300/20 px-5 py-3 text-sm font-semibold text-cyan-100 transition hover:scale-[1.03] hover:bg-cyan-300/30"
-              >
-                <FaCalendarCheck />
-                Schedule a call now
-              </a>
-            </Reveal>
-          </div>
-
-          <Reveal className="mt-10" delay={0.18}>
-            <div className="glass-card overflow-hidden p-0">
-              <img
-                src="https://github-readme-stats.vercel.app/api?username=Kushh-Santhosh&show_icons=true&hide_border=true&bg_color=00000000&title_color=7dd3fc&text_color=e2e8f0&icon_color=7dd3fc"
-                alt="Kushal GitHub stats"
-                className="w-full"
-                loading="lazy"
-              />
-            </div>
-          </Reveal>
         </section>
       </main>
 
-      <motion.a
-        href="#contact"
-        className="floating-contact"
-        initial={{ opacity: 0, y: 28 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9, duration: 0.5 }}
-        whileHover={{ scale: 1.06 }}
-      >
+      <motion.a href="#contact" className="floating-contact" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.55 }}>
         Contact Me
       </motion.a>
     </div>
