@@ -84,6 +84,7 @@ main {
   background-size: 18px 18px;
   background-position: center top;
   mix-blend-mode: screen;
+  animation: particleFloat 42s linear infinite;
 }
 
 .atmosphere-wave {
@@ -150,6 +151,29 @@ main {
     radial-gradient(92% 42% at 50% 26%, rgba(0, 0, 0, 0.98) 34%, transparent 72%),
     radial-gradient(70% 44% at 50% 82%, rgba(0, 0, 0, 0.72), transparent 70%),
     linear-gradient(180deg, rgba(0, 0, 0, 0.18), transparent 42%, rgba(0, 0, 0, 0.78));
+}
+
+.atmosphere::before,
+.atmosphere::after {
+  content: '';
+  position: absolute;
+  inset: -25%;
+  opacity: 0.28;
+  filter: blur(44px);
+  mix-blend-mode: screen;
+  will-change: transform;
+}
+
+.atmosphere::before {
+  background: conic-gradient(from 120deg at 50% 50%, transparent, rgba(69, 216, 255, 0.42), transparent, rgba(141, 107, 255, 0.36), transparent);
+  animation: liquidTurn 30s ease-in-out infinite;
+}
+
+.atmosphere::after {
+  background:
+    radial-gradient(46% 26% at 24% 52%, rgba(69, 216, 255, 0.34), transparent 70%),
+    radial-gradient(44% 28% at 78% 60%, rgba(141, 107, 255, 0.3), transparent 72%);
+  animation: liquidTurnReverse 38s ease-in-out infinite;
 }
 
 .cursor-light {
@@ -277,8 +301,30 @@ main {
   letter-spacing: 0;
 }
 
-.hero-content h1 {
+.hero-content h1,
+.rotating-hero-title {
   font-size: clamp(46px, 7vw, 92px);
+}
+
+.rotating-hero-title {
+  min-height: 2.12em;
+}
+
+.rotating-hero-title span,
+.rotating-hero-title strong {
+  display: block;
+}
+
+.rotating-hero-title span {
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.rotating-hero-title strong {
+  min-height: 1.02em;
+  background: linear-gradient(100deg, #ffffff 0%, #c5eeff 42%, #9f8fff 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .hero-content p,
@@ -654,17 +700,31 @@ main {
 
 .keyboard-base {
   display: grid;
-  grid-template-columns: repeat(4, minmax(92px, 1fr));
+  grid-template-columns: repeat(5, minmax(92px, 1fr));
   gap: 12px;
-  width: min(760px, 88vw);
-  border-radius: 30px;
-  padding: 28px;
+  width: min(900px, 92vw);
+  border-radius: 34px;
+  padding: 30px;
   transform-style: preserve-3d;
   background:
-    radial-gradient(circle at 25% 12%, rgba(69, 216, 255, 0.22), transparent 34%),
-    linear-gradient(135deg, rgba(9, 27, 61, 0.96), rgba(12, 13, 25, 0.98));
+    linear-gradient(105deg, rgba(255, 255, 255, 0.18), transparent 18%, transparent 76%, rgba(255, 255, 255, 0.08)),
+    radial-gradient(circle at 25% 12%, rgba(69, 216, 255, 0.18), transparent 34%),
+    linear-gradient(145deg, rgba(18, 30, 56, 0.98), rgba(10, 11, 21, 0.98));
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 42px 80px rgba(0, 0, 0, 0.48), inset 0 1px 1px rgba(255, 255, 255, 0.16);
+  box-shadow:
+    0 44px 90px rgba(0, 0, 0, 0.52),
+    0 0 80px rgba(69, 216, 255, 0.08),
+    inset 0 1px 1px rgba(255, 255, 255, 0.16),
+    inset 0 -18px 28px rgba(0, 0, 0, 0.36);
+}
+
+.keyboard-base::before {
+  content: '';
+  position: absolute;
+  inset: 12px;
+  border-radius: 26px;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  pointer-events: none;
 }
 
 .tech-key {
@@ -680,7 +740,9 @@ main {
   font-weight: 800;
   cursor: pointer;
   transform: translateZ(14px);
-  background: linear-gradient(145deg, #f8fbff, #dce8f4 55%, #b9c7d8);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.45) 5%, transparent 18%),
+    linear-gradient(145deg, #f8fbff, #dce8f4 55%, #b9c7d8);
   box-shadow:
     0 18px 28px rgba(1, 19, 48, 0.34),
     inset 0 1px 1px rgba(255, 255, 255, 0.8),
@@ -698,11 +760,30 @@ main {
   transform: translateZ(-8px);
 }
 
+.tech-key::before {
+  content: '';
+  position: absolute;
+  inset: 4px 7px auto 7px;
+  height: 20px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.62), transparent);
+  pointer-events: none;
+}
+
 .tech-key svg {
   width: 22px;
   height: 22px;
   color: var(--key-color);
   filter: drop-shadow(0 0 8px color-mix(in srgb, var(--key-color) 55%, transparent));
+}
+
+.tech-key span {
+  position: relative;
+  z-index: 1;
+  max-width: 100%;
+  text-align: center;
+  line-height: 1.05;
+  overflow-wrap: anywhere;
 }
 
 .tech-key-wide {
@@ -728,7 +809,7 @@ main {
 .keyboard-shadow {
   position: absolute;
   z-index: 1;
-  width: min(720px, 84vw);
+  width: min(880px, 86vw);
   height: 130px;
   bottom: 78px;
   border-radius: 50%;
@@ -869,6 +950,9 @@ main {
 }
 
 .floating-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
   position: fixed;
   right: 22px;
   bottom: 22px;
@@ -882,6 +966,57 @@ main {
   background: rgba(3, 4, 7, 0.62);
   backdrop-filter: blur(18px);
   box-shadow: 0 18px 52px rgba(0, 0, 0, 0.38), 0 0 28px rgba(69, 216, 255, 0.14);
+  transition: border-color 220ms ease, box-shadow 220ms ease, background 220ms ease;
+}
+
+.floating-contact:hover {
+  border-color: rgba(197, 238, 255, 0.72);
+  background: rgba(7, 14, 28, 0.76);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.44), 0 0 42px rgba(69, 216, 255, 0.2);
+}
+
+.mini-assistant {
+  position: relative;
+  width: 34px;
+  height: 28px;
+  border-radius: 14px 14px 12px 12px;
+  background:
+    radial-gradient(circle at 30% 26%, rgba(255, 255, 255, 0.72), transparent 18%),
+    linear-gradient(145deg, rgba(197, 238, 255, 0.92), rgba(69, 216, 255, 0.5) 52%, rgba(141, 107, 255, 0.32));
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.62), 0 0 20px rgba(69, 216, 255, 0.28);
+  animation: assistantBreathe 3.2s ease-in-out infinite;
+}
+
+.mini-assistant::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: -6px;
+  width: 9px;
+  height: 7px;
+  border-radius: 999px 999px 0 0;
+  border: 1px solid rgba(197, 238, 255, 0.72);
+  border-bottom: 0;
+  transform: translateX(-50%);
+}
+
+.assistant-eye {
+  position: absolute;
+  top: 11px;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: #06101e;
+  box-shadow: 0 0 6px rgba(3, 4, 7, 0.4);
+  animation: assistantBlink 5s infinite;
+}
+
+.assistant-eye-left {
+  left: 10px;
+}
+
+.assistant-eye-right {
+  right: 10px;
 }
 
 @keyframes waveDrift {
@@ -897,6 +1032,31 @@ main {
 @keyframes wavePulse {
   0%, 100% { transform: translate3d(0, 0, 0) scale(1); opacity: 0.36; }
   50% { transform: translate3d(1.5%, -1%, 0) scale(1.07); opacity: 0.52; }
+}
+
+@keyframes particleFloat {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-72px, 72px, 0); }
+}
+
+@keyframes liquidTurn {
+  0%, 100% { transform: rotate(0deg) scale(1.02) translate3d(0, 0, 0); }
+  50% { transform: rotate(24deg) scale(1.12) translate3d(2%, -1%, 0); }
+}
+
+@keyframes liquidTurnReverse {
+  0%, 100% { transform: rotate(0deg) scale(1.08) translate3d(0, 0, 0); }
+  50% { transform: rotate(-18deg) scale(1.16) translate3d(-2%, 1%, 0); }
+}
+
+@keyframes assistantBreathe {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2px) scale(1.04); }
+}
+
+@keyframes assistantBlink {
+  0%, 92%, 100% { transform: scaleY(1); }
+  95% { transform: scaleY(0.12); }
 }
 
 @media (max-width: 980px) {

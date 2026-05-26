@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import {
+  AnimatePresence,
   motion,
   useMotionValue,
   useReducedMotion,
@@ -10,13 +11,31 @@ import {
 import {
   FaArrowUpRightFromSquare,
   FaCalendarCheck,
+  FaCode,
   FaDiscord,
   FaEnvelope,
   FaGithub,
   FaInstagram,
   FaLinkedin,
+  FaPalette,
 } from 'react-icons/fa6'
-import { SiFirebase, SiMongodb, SiNodedotjs, SiPython, SiReact, SiTailwindcss } from 'react-icons/si'
+import {
+  SiCss,
+  SiDocker,
+  SiExpress,
+  SiFigma,
+  SiFirebase,
+  SiHtml5,
+  SiJavascript,
+  SiMongodb,
+  SiNextdotjs,
+  SiNodedotjs,
+  SiPython,
+  SiReact,
+  SiTailwindcss,
+  SiTypescript,
+  SiVercel,
+} from 'react-icons/si'
 import { FaJava } from 'react-icons/fa'
 import { GiArtificialIntelligence } from 'react-icons/gi'
 import clsx from 'clsx'
@@ -29,6 +48,14 @@ const CALENDLY_URL = 'https://calendly.com/kushh-santhosh/30min?hide_event_type_
 const PROFILE_IMAGE = '/kushal-profile.jpg'
 
 const premiumEase = [0.16, 1, 0.3, 1]
+
+const heroLines = [
+  'Building modern web experiences.',
+  'Developing scalable applications.',
+  'Designing immersive interfaces.',
+  'Engineering intelligent systems.',
+  'Building startup-focused platforms.',
+]
 
 const navLinks = [
   { label: 'About', href: '#about' },
@@ -95,13 +122,24 @@ const journey = [
 const stack = [
   { name: 'Python', desc: 'Automation, AI workflows, scripting', icon: SiPython, color: '#55d8ea', wide: false },
   { name: 'Java', desc: 'Core programming and app logic', icon: FaJava, color: '#ff8a5c', wide: false },
+  { name: 'JavaScript', desc: 'Browser logic and product interaction', icon: SiJavascript, color: '#f7df1e', wide: false },
+  { name: 'TypeScript', desc: 'Typed interfaces and safer app scale', icon: SiTypescript, color: '#67a8ff', wide: false },
   { name: 'React', desc: 'Modern interface architecture', icon: SiReact, color: '#61dafb', wide: false },
+  { name: 'Next.js', desc: 'Production-grade React apps', icon: SiNextdotjs, color: '#ffffff', wide: false },
   { name: 'Node.js', desc: 'Backend APIs and services', icon: SiNodedotjs, color: '#78d982', wide: false },
-  { name: 'Firebase', desc: 'Hosting, auth, real-time apps', icon: SiFirebase, color: '#ffcc4d', wide: true },
-  { name: 'MongoDB', desc: 'Flexible application databases', icon: SiMongodb, color: '#6ee787', wide: true },
-  { name: 'Tailwind', desc: 'Fast premium UI systems', icon: SiTailwindcss, color: '#38bdf8', wide: true },
+  { name: 'Express.js', desc: 'Lightweight server and API layers', icon: SiExpress, color: '#f3f7ff', wide: false },
+  { name: 'MongoDB', desc: 'Flexible application databases', icon: SiMongodb, color: '#6ee787', wide: false },
+  { name: 'Firebase', desc: 'Hosting, auth, real-time apps', icon: SiFirebase, color: '#ffcc4d', wide: false },
+  { name: 'Tailwind CSS', desc: 'Fast premium UI systems', icon: SiTailwindcss, color: '#38bdf8', wide: true },
+  { name: 'HTML5', desc: 'Accessible page structure', icon: SiHtml5, color: '#ff8a5c', wide: false },
+  { name: 'CSS3', desc: 'Motion, layout, and responsive polish', icon: SiCss, color: '#60a5fa', wide: false },
   { name: 'GitHub', desc: 'Version control and collaboration', icon: FaGithub, color: '#ffffff', wide: false },
+  { name: 'Docker', desc: 'Portable app environments', icon: SiDocker, color: '#63d7ff', wide: false },
   { name: 'AI Tools', desc: 'AI-based projects and prototypes', icon: GiArtificialIntelligence, color: '#a78bfa', wide: true },
+  { name: 'Figma', desc: 'Design systems and UI planning', icon: SiFigma, color: '#ff7ab6', wide: false },
+  { name: 'REST APIs', desc: 'Clean client-server communication', icon: FaCode, color: '#8ef6d2', wide: false },
+  { name: 'UI/UX', desc: 'Product flow, hierarchy, and usability', icon: FaPalette, color: '#f0abfc', wide: false },
+  { name: 'Vercel', desc: 'Frontend deployment workflows', icon: SiVercel, color: '#ffffff', wide: false },
 ]
 
 const socials = [
@@ -154,16 +192,53 @@ function HeroPortrait() {
   return (
     <motion.div
       className="hero-portrait-shell"
+      animate={{ y: [0, -12, 0], rotate: [0, 0.45, 0] }}
       initial={{ opacity: 0, scale: 0.96, y: 30 }}
-      animate={{ opacity: 1, scale: 1, y: 0 }}
-      transition={{ duration: 1, delay: 0.28, ease: premiumEase }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      transition={{
+        opacity: { duration: 1, delay: 0.28, ease: premiumEase },
+        scale: { duration: 1, delay: 0.28, ease: premiumEase },
+        y: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
+        rotate: { duration: 7, repeat: Infinity, ease: 'easeInOut' },
+      }}
     >
-      <img src={PROFILE_IMAGE} alt="Kushal Santosh P" className="hero-portrait" />
+      <img src={PROFILE_IMAGE} alt="Kushal Santhosh" className="hero-portrait" />
       <div className="portrait-glass-panel">
         <span>Available for freelance builds</span>
         <strong>Web apps, AI projects, and startup-focused systems</strong>
       </div>
     </motion.div>
+  )
+}
+
+function RotatingHeroText() {
+  const reduceMotion = useReducedMotion()
+  const [index, setIndex] = useState(0)
+
+  useEffect(() => {
+    if (reduceMotion) return undefined
+    const timer = window.setInterval(() => {
+      setIndex((current) => (current + 1) % heroLines.length)
+    }, 2600)
+
+    return () => window.clearInterval(timer)
+  }, [reduceMotion])
+
+  return (
+    <h1 className="rotating-hero-title">
+      <span>Kushal Santhosh</span>
+      <AnimatePresence mode="wait">
+        <motion.strong
+          key={heroLines[index]}
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 22, filter: 'blur(14px)' }}
+          animate={reduceMotion ? { opacity: 1 } : { opacity: 1, y: 0, filter: 'blur(0px)' }}
+          exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -18, filter: 'blur(12px)' }}
+          transition={{ duration: 0.72, ease: premiumEase }}
+        >
+          {heroLines[index]}
+        </motion.strong>
+      </AnimatePresence>
+    </h1>
   )
 }
 
@@ -178,6 +253,11 @@ function TechKeyboard() {
     const x = (event.clientX - rect.left) / rect.width - 0.5
     const y = (event.clientY - rect.top) / rect.height - 0.5
     setTilt({ x: x * 10, y: y * -8 })
+  }
+
+  const openSearch = (item) => {
+    setActive(item)
+    window.open(`https://www.google.com/search?q=${encodeURIComponent(item.name)}`, '_blank', 'noopener,noreferrer')
   }
 
   return (
@@ -198,7 +278,8 @@ function TechKeyboard() {
                 style={{ '--key-color': item.color }}
                 onMouseEnter={() => setActive(item)}
                 onFocus={() => setActive(item)}
-                onClick={() => setActive(item)}
+                onClick={() => openSearch(item)}
+                aria-label={`Search Google for ${item.name}`}
                 initial={{ opacity: 0, y: 18 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
@@ -263,6 +344,30 @@ function ProjectCard({ project, index }) {
   )
 }
 
+function FloatingContact({ pointer }) {
+  const width = typeof window === 'undefined' ? 1 : window.innerWidth
+  const height = typeof window === 'undefined' ? 1 : window.innerHeight
+  const eyeX = Math.max(-4, Math.min(4, (pointer.x / width - 0.5) * 10))
+  const eyeY = Math.max(-3, Math.min(3, (pointer.y / height - 0.5) * 8))
+
+  return (
+    <motion.a
+      href="#contact"
+      className="floating-contact"
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.9, duration: 0.55 }}
+      whileHover={{ scale: 1.04, y: -3 }}
+    >
+      <span className="mini-assistant" aria-hidden="true">
+        <span className="assistant-eye assistant-eye-left" style={{ transform: `translate(${eyeX}px, ${eyeY}px)` }} />
+        <span className="assistant-eye assistant-eye-right" style={{ transform: `translate(${eyeX}px, ${eyeY}px)` }} />
+      </span>
+      <span>Contact Me</span>
+    </motion.a>
+  )
+}
+
 function App() {
   const [pointer, setPointer] = useState({ x: 0, y: 0 })
   const pointerX = useMotionValue(0)
@@ -301,7 +406,7 @@ function App() {
 
       <motion.header className="site-header" style={{ '--header-alpha': headerOpacity }}>
         <nav>
-          <a href="#home" className="brand-mark">Kushal Santosh P</a>
+          <a href="#home" className="brand-mark">Kushal Santhosh</a>
           <div className="nav-links">
             {navLinks.map((item) => <a key={item.href} href={item.href}>{item.label}</a>)}
           </div>
@@ -313,9 +418,11 @@ function App() {
         <section id="home" className="hero-section scene-section">
           <motion.div className="hero-content" variants={heroVariants} initial="hidden" animate="visible">
             <motion.span className="eyebrow" variants={heroItem}>BTech IT Student / Full Stack Developer / AI Developer</motion.span>
-            <motion.h1 variants={heroItem}>Building modern web apps and AI-based systems.</motion.h1>
+            <motion.div variants={heroItem}>
+              <RotatingHeroText />
+            </motion.div>
             <motion.p variants={heroItem}>
-              I am Kushal Santosh P, a developer from India with 2+ years of experience and 30+ completed projects across freelance websites, app development, AI experiments, and startup-focused builds.
+              I am Kushal Santhosh, a developer from India with 2+ years of experience and 30+ completed projects across freelance websites, app development, AI experiments, and startup-focused builds.
             </motion.p>
             <motion.div className="hero-actions" variants={heroItem}>
               <a href="#projects">View work <FaArrowUpRightFromSquare /></a>
@@ -334,11 +441,11 @@ function App() {
           </Reveal>
           <div className="about-grid">
             <Reveal className="about-image-panel">
-              <img src={PROFILE_IMAGE} alt="Kushal Santosh P" />
+              <img src={PROFILE_IMAGE} alt="Kushal Santhosh" />
             </Reveal>
             <Reveal className="about-copy" delay={0.1}>
               <p>
-                Hey, I am Kushal Santosh P, a BTech Information Technology student, full stack developer, and AI developer. My work sits between clean websites, functional applications, and AI-based projects that solve practical problems.
+                Hey, I am Kushal Santhosh, a BTech Information Technology student, full stack developer, and AI developer. My work sits between clean websites, functional applications, and AI-based projects that solve practical problems.
               </p>
               <p>
                 Over the past 2+ years, I have completed 30+ projects, including freelance web development, app development, hosting work, and AI experiments. I enjoy building systems that look polished but still stay reliable, scalable, and easy to use.
@@ -402,7 +509,7 @@ function App() {
             <SectionHeading label="Schedule" title="Book a call when you want to discuss a project." subtitle="A clean scheduling panel keeps the booking flow professional and direct." />
           </Reveal>
           <Reveal className="schedule-panel" delay={0.1}>
-            <iframe title="Schedule a Call With Kushal Santosh P" src={CALENDLY_URL} width="100%" height="720" loading="lazy" />
+                <iframe title="Schedule a Call With Kushal Santhosh" src={CALENDLY_URL} width="100%" height="720" loading="lazy" />
           </Reveal>
         </section>
 
@@ -427,9 +534,7 @@ function App() {
         </section>
       </main>
 
-      <motion.a href="#contact" className="floating-contact" initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.9, duration: 0.55 }}>
-        Contact Me
-      </motion.a>
+      <FloatingContact pointer={pointer} />
     </div>
   )
 }
